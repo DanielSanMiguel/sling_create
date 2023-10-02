@@ -5,8 +5,7 @@ import requests
 import json
 import datetime
 import time
-#import sling_data as s_d
-#s_d.sling_token
+
 
 contrasena_correcta = st.secrets['contrasena_correcta']
 st.title("Aplicación Protegida con Contraseña")
@@ -16,7 +15,7 @@ if contrasena == contrasena_correcta:
     # Aquí puedes agregar el contenido de tu aplicación
     inicio = time.time()
 
-    api_key = 'keyS8o72K0dtRIqoZ'
+    api_key = st.secrets['at_token']
     base_id = 'appFezarrh9fv6WrS'
     table_name = 'M_I_Dani_23'
     table_name_DataCenter = 'DataCenter'
