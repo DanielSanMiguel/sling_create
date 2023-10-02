@@ -64,7 +64,8 @@ with open('style.css', 'w') as stl:
                                                                  'Sede',
                                                                  'Telf_Coord',
                                                                  'Status partido',
-                                                                 'ARCID'])
+                                                                 'ARCID',
+                                                                 'Fecha_partido'])
             result_at_Table2 = at_dc.get(table_name_DataCenter,view = 'Grid view')
             # convertimos a DataFrame de Pandas
             airtable_dataframe = convert_to_dataframe(result_at_Table1)
