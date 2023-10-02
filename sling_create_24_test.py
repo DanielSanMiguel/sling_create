@@ -1,4 +1,3 @@
-
 import json
 import datetime
 import time
@@ -86,7 +85,7 @@ with open('style.css', 'w') as stl:
             def fin_part(hora_inicio, hour, minute):
                 '''Define la hora de fin segun la hora de inicio y horas y minutos desde sling_data'''
                 fecha = datetime.datetime.strptime(hora_inicio, "%Y-%m-%dT%H:%M:%S.%fZ")
-                hora_fin = fecha + datetime.timedelta(hour=int(hours), minute=int(minutes))
+                hora_fin = fecha + datetime.timedelta(hours=int(hour), minutes=int(minute))
                 hora_fin_total = hora_fin.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
                 return hora_fin_total
             st.subheader('Sling Shift Creator')
