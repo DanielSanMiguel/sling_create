@@ -18,6 +18,11 @@ with open('style.css', 'w') as stl:
                 .stButton>button {
                     background-color: #38F538;
                     color: black;}
+                .stDataFrame {background-color: #FAFCB3;
+                              border: 2px solid #FFA200;
+                              padding: 1% 1% 1% 1%;
+                              border-radius: 10px;
+                              }
                 </style>""",unsafe_allow_html=True,)
     pag = st.empty()
     contrasena_correcta = st.secrets['contrasena_correcta']
@@ -87,8 +92,7 @@ with open('style.css', 'w') as stl:
             st.title('Sling Shift Creator')
             st.divider()
             st.subheader('Base de datos de Airtable')
-            
-            st.dataframe(atdf)
+            st.dataframe(atdf.style.set_properties(**{'background-color': '#EFFCD8'}))
             st.subheader('Crear partidos y modificar partidos existentes')
     
             b_1 = st.button('Ejecutar')
