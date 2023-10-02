@@ -90,7 +90,6 @@ with open('style.css', 'w') as stl:
                 hora_fin_total = hora_fin.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
                 return hora_fin_total
             st.title('Sling Shift Creator')
-            st.divider()
             st.subheader('Base de datos de Airtable')
             st.dataframe(atdf.style.set_properties(**{'background-color': '#EFFCD8'}))
             st.subheader('Crear partidos y modificar partidos existentes')
