@@ -12,6 +12,7 @@ st.title("Aplicación Protegida con Contraseña")
 contrasena = st.text_input("Ingrese la contraseña:", type="password")
 if contrasena == contrasena_correcta:
     st.success("¡Contraseña correcta! Bienvenido a la aplicación.")
+    st.empty()
     # Aquí puedes agregar el contenido de tu aplicación
     inicio = time.time()
 
