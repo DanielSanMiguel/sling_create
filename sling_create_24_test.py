@@ -5,11 +5,7 @@ import requests
 import json
 import datetime
 import time
-st.markdown( """<style>
-            .stButton>button {
-                background-color: #38F538;
-                color: black;}
-            </style>""",unsafe_allow_html=True,)
+
 
 token_github = st.secrets['github_token']
 headers_1 = {"Authorization": f"token {token_github}"}
@@ -18,6 +14,11 @@ response = requests.get(url_archivo_github, headers=headers_1)
 contenido_css = response.text
 with open('style.css', 'w') as stl:
     st.markdown(f'<style>{contenido_css}<style>', unsafe_allow_html=True)
+    st.markdown( """<style>
+                .stButton>button {
+                    background-color: #38F538;
+                    color: black;}
+                </style>""",unsafe_allow_html=True,)
 pag = st.empty()
 contrasena_correcta = st.secrets['contrasena_correcta']
 pag.title("Aplicación Protegida con Contraseña")
