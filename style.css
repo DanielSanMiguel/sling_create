@@ -1,7 +1,6 @@
 /* Expander general */
 /*div[data-testid="stExpander"]:nth-child(3) */
-canvas
-    {
+canvas[data-testid="data-grid-canvas"]{
     background-color: #C8FFC8;
     border: 2px solid #FFA200;
     padding: 5% 5% 5% 10%;
