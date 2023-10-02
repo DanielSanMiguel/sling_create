@@ -58,7 +58,13 @@ with open('style.css', 'w') as stl:
             at_Table1 = Airtable(base_id, api_key)
             at_dc = Airtable(base_id,  api_key)
             # recuperamos datos de la tabla
-            result_at_Table1 = at_Table1.get(table_name, view = 'Grid view')
+            result_at_Table1 = at_Table1.get(table_name, fields=['ID-partido',
+                                                                 'Piloto',
+                                                                 'Fecha_UTC',
+                                                                 'Sede',
+                                                                 'Telf_Coord',
+                                                                 'Status partido',
+                                                                 'ARCID'])
             result_at_Table2 = at_dc.get(table_name_DataCenter,view = 'Grid view')
             # convertimos a DataFrame de Pandas
             airtable_dataframe = convert_to_dataframe(result_at_Table1)
