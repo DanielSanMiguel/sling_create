@@ -1,11 +1,11 @@
+
+import json
+import datetime
+import time
 import streamlit as st
 import pandas as pd
 from airtable import Airtable
 import requests
-import json
-import datetime
-import time
-
 
 token_github = st.secrets['github_token']
 headers_1 = {"Authorization": f"token {token_github}"}
@@ -34,12 +34,12 @@ with open('style.css', 'w') as stl:
         with pag.container():
             # Aquí puedes agregar el contenido de tu aplicación
             inicio = time.time()
-        
+
             api_key = st.secrets['at_token']
             base_id = 'appFezarrh9fv6WrS'
             table_name = 'M_I_Dani_23'
             table_name_DataCenter = 'DataCenter'
-        
+
             def convert_to_dataframe(airtable_records):
                 """Converts dictionary output from airtable_download() into a Pandas dataframe."""
                 airtable_rows = []
@@ -65,46 +65,46 @@ with open('style.css', 'w') as stl:
             atdf = airtable_dataframe.reset_index(drop= True)
             dc_drame = convert_to_dataframe(result_at_Table2)
             dc = dc_drame.reset_index(drop=True)
-        
+
             sling_token_list = [tok for n_t,tok in enumerate(dc['ids']) if dc.loc[n_t,'Name'] == 'sling_token']
             sling_token = sling_token_list[0]
             ids_sling = {si:dc.loc[ne,'ids']  for ne, si in enumerate(dc['Name']) if (dc.loc[ne,'type'] == 'piloto id')}
             equipos = {eq:dc.loc[ne,'ids']  for ne, eq in enumerate(dc['Name']) if (dc.loc[ne,'type'] == 'position id')}
             ids_location = {l:dc.loc[ne,'ids']  for ne, l in enumerate(dc['Name']) if (dc.loc[ne,'type'] == 'location id')}
             try:
-                atdf['publi_sling'] = [x if x == True else (False) for x in atdf['publi_sling']]    
+                atdf['publi_sling'] = [x if x == True else (False) for x in atdf['publi_sling']]
             except:
                 atdf['publi_sling']=False
-        
+
             headers_AT = {"Authorization" : f"Bearer {api_key}",  "Content-Type" : 'application/json' }
             headers_2 = {"Authorization" : sling_token,  "content-type" : 'application/json'}
             endpoint = 'https://api.getsling.com/v1/shifts'
             endpoint2 = 'https://api.getsling.com/v1/shifts/'
             endpoint3 = f'https://api.getsling.com/v1/calendar/167205/users/3835659?dates={hoy}%2F{t_fin}'
             endpoint_AT = f'https://api.airtable.com/v0/{base_id}/{table_name}'
-        
-            def fin_part(hora_inicio, hours, minutes):
+
+            def fin_part(hora_inicio, hour, minute):
                 '''Define la hora de fin segun la hora de inicio y horas y minutos desde sling_data'''
                 fecha = datetime.datetime.strptime(hora_inicio, "%Y-%m-%dT%H:%M:%S.%fZ")
-                hora_fin = fecha + datetime.timedelta(hours=int(hours), minutes=int(minutes))
+                hora_fin = fecha + datetime.timedelta(hour=int(hours), minute=int(minutes))
                 hora_fin_total = hora_fin.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
                 return hora_fin_total
             st.subheader('Sling Shift Creator')
             st.write('Base de datos de Airtable')
             st.dataframe(atdf.style.set_properties(**{'background-color': '#EFFCD8'}))
             st.write('Crear partidos y modificar partidos existentes')
-    
+
             b_1 = st.button('Ejecutar')
             if b_1:
                 for i in range(len(atdf)):
-                    if atdf.loc[i,'publi_sling'] == False:
+                    if atdf.loc[i,'publi_sling'] is False:
                         if equipos[atdf.loc[i,'ID-partido'][12:-2]] == '15139774':
                             hours, minutes = [w for x,w in enumerate(dc['hora']) if dc.loc[x,'Name']== '15139774'], [w for x,w in enumerate(dc['minuto']) if dc.loc[x,'Name']== '15139774']
                         elif equipos[atdf.loc[i,'ID-partido'][12:-2]] == '15349440':
                             hours, minutes = [w for x,w in enumerate(dc['hora']) if dc.loc[x,'Name']== '15349440'], [w for x,w in enumerate(dc['minuto']) if dc.loc[x,'Name']== '15349440']
                         elif equipos[atdf.loc[i,'ID-partido'][12:-2]] == '6451139':
                             hours, minutes = [w for x,w in enumerate(dc['hora']) if dc.loc[x,'Name']== '6451139'], [w for x,w in enumerate(dc['minuto']) if dc.loc[x,'Name']== '6451139']
-                            
+
                         data = {"user": {"id": ids_sling[atdf.loc[i,'Piloto']]},
                             "summary": atdf.loc[i,'ID-partido'],
                             "location": {"id": ids_location[atdf.loc[i,'Sede']]},
@@ -117,8 +117,8 @@ with open('style.css', 'w') as stl:
                         print(f'creado {summary}')
                         data_AT = {'records' : [{"id": atdf.loc[i,'Rec2'],'fields':{'publi_sling': True }}]}
                         req_AT = requests.patch(endpoint_AT, json.dumps(data_AT), headers = headers_AT)
-                
-                
+
+
                 calendar = requests.get(endpoint3, headers = headers_2).json()
                 calend_pd_rows = []
                 try:
@@ -139,7 +139,7 @@ with open('style.css', 'w') as stl:
                                 req.json()
                 except:
                     print('SIN SHIFTS')
-                
+
                 fin = time.time()
                 total=int(fin-inicio)
                 print(f'Procesado en {total} segundos')
