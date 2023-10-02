@@ -1,6 +1,6 @@
 /* Expander general */
 /*div[data-testid="stExpander"]:nth-child(3) */
-div[class_="dvn-scroller glideDataEditor"]
+div[class_="dvn-scroller glideDataEditor"]:nth-child(2)
 {
     background-color: #C8FFC8;
     border: 2px solid #FFA200;
