@@ -97,7 +97,7 @@ with open('style.css', 'w') as stl:
             b_1 = st.button('Ejecutar')
             if b_1:
                 for i in range(len(atdf)):
-                    if atdf.loc[i,'publi_sling'] is False:
+                    if atdf.loc[i,'publi_sling'] == False:
                         if equipos[atdf.loc[i,'ID-partido'][12:-2]] == '15139774':
                             hours, minutes = [w for x,w in enumerate(dc['hora']) if dc.loc[x,'Name']== '15139774'], [w for x,w in enumerate(dc['minuto']) if dc.loc[x,'Name']== '15139774']
                         elif equipos[atdf.loc[i,'ID-partido'][12:-2]] == '15349440':
