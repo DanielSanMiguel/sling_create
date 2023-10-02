@@ -1,11 +1,11 @@
 /* Expander general */
 /*div[data-testid="stExpander"]:nth-child(3) */
-[data-testid="stDataFrame"]{
-    background-color: #FAFCB3;
+div[class_="glideDataEditor wzg2m5k"]{
+    --gdg-bg-cell: #FAFCB3;
     }
 
 
-       font-size: 16px;
+     font-size: 16px;
     font-family: "Source Sans Pro", sans-serif;
     font-weight: 400;
     line-height: 1.6;
@@ -13,7 +13,47 @@
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-font-smoothing: auto;
     color: rgb(49, 51, 63);
+    user-select: auto;
+    direction: ltr;
+    --wzg2m5k-0: 5366px;
+    --wzg2m5k-1: 561px;
+    --gdg-accent-color: #ff4b4b;
+    --gdg-accent-fg: #7d1d1d;
+    --gdg-accent-light: rgba(255, 75, 75, 0.1);
+    --gdg-text-dark: #31333F;
+    --gdg-text-medium: rgba(49, 51, 63, 0.8);
+    --gdg-text-light: rgba(49, 51, 63, 0.4);
+    --gdg-text-bubble: rgba(49, 51, 63, 0.6);
+    --gdg-bg-icon-header: rgba(49, 51, 63, 0.6);
+    --gdg-fg-icon-header: #ffffff;
+    --gdg-text-header: rgba(49, 51, 63, 0.6);
+    --gdg-text-group-header: rgba(49, 51, 63, 0.6);
+    --gdg-text-header-selected: #ffffff;
+    --gdg-bg-cell: rgb(255, 0, 0);
+    --gdg-bg-cell-medium: #19b7b1;
+    --gdg-bg-header: rgba(248, 249, 251, 1);
+    --gdg-bg-header-has-focus: #f0f2f6;
+    --gdg-bg-header-hovered: rgba(248, 249, 251, 1);
+    --gdg-bg-bubble: #f0f2f6;
+    --gdg-bg-bubble-selected: #f0f2f6;
+    --gdg-bg-search-result: rgba(255, 75, 75, 0.1);
+    --gdg-border-color: rgb(25 187 30 / 86%);
+    --gdg-horizontal-border-color: rgba(49, 51, 63, 0.1);
+    --gdg-drilldown-border: rgba(151, 166, 195, 0.25);
+    --gdg-link-color: #0068c9;
+    --gdg-cell-horizontal-padding: 8px;
+    --gdg-cell-vertical-padding: 3px;
+    --gdg-header-font-style: 14px;
+    --gdg-base-font-style: 14px;
+    --gdg-marker-font-style: 9px;
+    --gdg-font-family: "Source Sans Pro", sans-serif;
+    --gdg-editor-font-size: 14px;
+    --s1jz82f8-0: auto;
+    -webkit-user-drag: none;
     box-sizing: border-box;
-    position: relative;
-    display: inline-block;
-    --gdg-bg-cell: #FAFCB3;
+    min-width: 100%;
+    border-radius: 0.5rem;
+    overflow: overlay !important;
+    transform: translateZ(0);
+    width: 683px;
+    height: 398px;
