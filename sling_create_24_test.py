@@ -1,5 +1,6 @@
 import json
 import datetime
+import pytz
 import time
 import streamlit as st
 import pandas as pd
@@ -36,7 +37,7 @@ with open('style.css', 'w') as stl:
 
             api_key = st.secrets['at_token']
             base_id = 'appFezarrh9fv6WrS'
-            table_name = 'M_I_Dani_23'
+            table_name = 'vuelos_programados'
             table_name_DataCenter = 'DataCenter'
 
             def convert_to_dataframe(airtable_records):
@@ -62,6 +63,10 @@ with open('style.css', 'w') as stl:
             # convertimos a DataFrame de Pandas
             airtable_dataframe = convert_to_dataframe(result_at_Table1)
             atdf = airtable_dataframe.reset_index(drop= True)
+            at_sling = atdf.loc[:,['ID-partido','Fecha_partido','Sede','Piloto']].sort_values('Fecha_partido',ascending=True)
+            at_sling['Fecha_partido'] = [pd.to_datetime(x) for x in at_sling['Fecha_partido']]
+            at_sling['Fecha_partido'] = [x.tz_convert(pytz.timezone('Europe/Madrid')) for x in at_sling['Fecha_partido']]
+
             dc_drame = convert_to_dataframe(result_at_Table2)
             dc = dc_drame.reset_index(drop=True)
 
@@ -82,33 +87,27 @@ with open('style.css', 'w') as stl:
             endpoint3 = f'https://api.getsling.com/v1/calendar/167205/users/3835659?dates={hoy}%2F{t_fin}'
             endpoint_AT = f'https://api.airtable.com/v0/{base_id}/{table_name}'
 
-            def fin_part(hora_inicio, hour, minute):
+            def fin_part(hora_inicio, minute):
                 '''Define la hora de fin segun la hora de inicio y horas y minutos desde sling_data'''
                 fecha = datetime.datetime.strptime(hora_inicio, "%Y-%m-%dT%H:%M:%S.%fZ")
-                hora_fin = fecha + datetime.timedelta(hours=int(hour), minutes=int(minute))
+                hora_fin = fecha + datetime.timedelta(minutes=int(minute))
                 hora_fin_total = hora_fin.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
                 return hora_fin_total
             st.subheader('Sling Shift Creator')
             st.write('Base de datos de Airtable')
-            st.dataframe(atdf.style.set_properties(**{'background-color': '#EFFCD8'}))
+            st.dataframe(at_sling.style.set_properties(**{'background-color': '#EFFCD8'}))
             st.write('Crear partidos y modificar partidos existentes')
 
             b_1 = st.button('Ejecutar')
             if b_1:
                 for i in range(len(atdf)):
                     if atdf.loc[i,'publi_sling'] == False:
-                        if equipos[atdf.loc[i,'ID-partido'][12:-2]] == '15139774':
-                            hours, minutes = [w for x,w in enumerate(dc['hora']) if dc.loc[x,'Name']== '15139774'], [w for x,w in enumerate(dc['minuto']) if dc.loc[x,'Name']== '15139774']
-                        elif equipos[atdf.loc[i,'ID-partido'][12:-2]] == '15349440':
-                            hours, minutes = [w for x,w in enumerate(dc['hora']) if dc.loc[x,'Name']== '15349440'], [w for x,w in enumerate(dc['minuto']) if dc.loc[x,'Name']== '15349440']
-                        elif equipos[atdf.loc[i,'ID-partido'][12:-2]] == '6451139':
-                            hours, minutes = [w for x,w in enumerate(dc['hora']) if dc.loc[x,'Name']== '6451139'], [w for x,w in enumerate(dc['minuto']) if dc.loc[x,'Name']== '6451139']
-
+                        
                         data = {"user": {"id": ids_sling[atdf.loc[i,'Piloto']]},
                             "summary": atdf.loc[i,'ID-partido'],
                             "location": {"id": ids_location[atdf.loc[i,'Sede']]},
-                            "position": {"id": equipos[atdf.loc[i,'ID-partido'][12:-2]]},
-                            "dtend": fin_part(atdf.loc[i,'Fecha_partido'],hours[0], minutes[0]),
+                            "position": {"id": equipos[atdf.loc[i,'ID-partido'][12:-3]]},
+                            "dtend": fin_part(atdf.loc[i,'Fecha_partido'],atdf.loc[i,'Duracion']),
                             "dtstart": atdf.loc[i,'Fecha_partido'],
                             "status": "planning"}
                         req = requests.post(endpoint, json.dumps(data), headers = headers_2)
@@ -123,18 +122,12 @@ with open('style.css', 'w') as stl:
                 try:
                     for y,z in enumerate(calendar):
                         for u in range(len(atdf)):
-                            if equipos[atdf.loc[u,'ID-partido'][12:-2]] == '15139774':
-                                hours, minutes = [w for x,w in enumerate(dc['hora']) if dc.loc[x,'Name']== '15139774'], [w for x,w in enumerate(dc['minuto']) if dc.loc[x,'Name']== '15139774']
-                            elif equipos[atdf.loc[u,'ID-partido'][12:-2]] == '15349440':
-                                hours, minutes = [w for x,w in enumerate(dc['hora']) if dc.loc[x,'Name']== '15349440'], [w for x,w in enumerate(dc['minuto']) if dc.loc[x,'Name']== '15349440']
-                            elif equipos[atdf.loc[u,'ID-partido'][12:-2]] == '6451139':
-                                hours, minutes = [w for x,w in enumerate(dc['hora']) if dc.loc[x,'Name']== '6451139'], [w for x,w in enumerate(dc['minuto']) if dc.loc[x,'Name']== '6451139']
                             if datetime.datetime.strptime(z["dtstart"],'%Y-%m-%dT%H:%M:%S%z') != datetime.datetime.strptime(atdf.loc[u,'Fecha_partido'],'%Y-%m-%dT%H:%M:%S.%f%z') and z["summary"]==atdf.loc[u,'ID-partido']:
                                 print(y,z["dtstart"],z["id"])
                                 id_new = z["id"]
                                 endpoint2 = f'https://api.getsling.com/v1/shifts/{id_new}'
-                                data = {"user": {"id": z["user"]['id']}, "summary": z['summary'], "position": z["position"], "location": z["location"], "dtend": fin_part(atdf.loc[u,'Fecha_partido'],hours[0], minutes[0]), "dtstart": atdf.loc[u,'Fecha_partido'], "status": "planning"}
-                                req = requests.put(endpoint2, json.dumps(data), headers = headers_2)
+                                data = {"user": {"id": z["user"]['id']}, "summary": z['summary'], "position": z["position"], "location": z["location"], "dtend": fin_part(atdf.loc[u,'Fecha_partido'],atdf.loc[u,'Duracion']), "dtstart": atdf.loc[u,'Fecha_partido'], "status": "planning"}
+                                #req = requests.put(endpoint2, json.dumps(data), headers = headers_2)
                                 req.json()
                 except:
                     print('SIN SHIFTS')
