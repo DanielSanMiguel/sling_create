@@ -116,19 +116,19 @@ with open('style.css', 'w') as stl:
                         data_AT = {'records' : [{"id": atdf.loc[i,'Rec2'],'fields':{'publi_sling': True }}]}
                         req_AT = requests.patch(endpoint_AT, json.dumps(data_AT), headers = headers_AT)
 
-
                 calendar = requests.get(endpoint3, headers = headers_2).json()
                 calend_pd_rows = []
                 try:
                     for y,z in enumerate(calendar):
                         for u in range(len(atdf)):
-                            if datetime.datetime.strptime(z["dtstart"],'%Y-%m-%dT%H:%M:%S%z') != datetime.datetime.strptime(atdf.loc[u,'Fecha_partido'],'%Y-%m-%dT%H:%M:%S.%f%z') and z["summary"]==atdf.loc[u,'ID-partido']:
+                            if datetime.datetime.strptime(z["dtstart"],'%Y-%m-%dT%H:%M:%S%z') != datetime.datetime.strptime(atdf.loc[u,'Fecha_partido'],'%Y-%m-%dT%H:%M:%S.%f%z') and z["summary"][:9]==atdf.loc[u,'ID-partido'][:9]:
                                 print(y,z["dtstart"],z["id"])
                                 id_new = z["id"]
                                 endpoint2 = f'https://api.getsling.com/v1/shifts/{id_new}'
-                                data = {"user": {"id": z["user"]['id']}, "summary": z['summary'], "position": z["position"], "location": z["location"], "dtend": fin_part(atdf.loc[u,'Fecha_partido'],atdf.loc[u,'Duracion']), "dtstart": atdf.loc[u,'Fecha_partido'], "status": "planning"}
-                                #req = requests.put(endpoint2, json.dumps(data), headers = headers_2)
+                                data = {"user": {"id": z["user"]['id']}, "summary": z['summary'], "position": z["position"], "location": z["location"], "dtend": fin_part(atdf.loc[u,'Fecha_partido'],atdf.loc[u,'Duracion']), "dtstart": atdf.loc[u,'Fecha_partido'],"status": z['status']}
+                                req = requests.put(endpoint2, json.dumps(data), headers = headers_2)
                                 req.json()
+
                 except:
                     print('SIN SHIFTS')
 
