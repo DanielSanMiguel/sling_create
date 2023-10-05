@@ -26,6 +26,10 @@ with open('style.css', 'w') as stl:
                 .stButton>button {
                     background-color: #38F538;
                     color: black;}
+                .st-be.st-b3.st-bf.st-b8.st-bg.st-bh.st-bi.st-bj.st-bk.st-bl.st-bm.st-bn.st-bo.st-b1.st-bp.st-au.st-ax.st-av.st-aw.st-ae.st-af.st-ag.st-ah.st-ai.st-aj.st-bq.st-br.st-bs.st-bt.st-bu.st-bv.st-cy {
+                    border: 1px solid #FFA200 !important;
+                    width: 133px;
+                    }
                 .stDataFrame {background-color: #FAFCB3;
                               border: 2px solid #FFA200;
                               padding: 1% 1% 1% 1%;
