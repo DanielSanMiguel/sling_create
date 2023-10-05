@@ -12,6 +12,14 @@ headers_1 = {"Authorization": f"token {token_github}"}
 url_archivo_github = "https://raw.githubusercontent.com/DanielSanMiguel/fly-fut_app/main/style.css"
 response = requests.get(url_archivo_github, headers=headers_1)
 contenido_css = response.text
+
+def dur_partido(dur_part):
+    if dur_part != 0:
+        duracion = atdf.loc[i,'Duracion']
+    else:
+        duracion = st.text_input('Introducir duración del partido/entrenamiento en minutos')
+    return duracion
+
 with open('style.css', 'w') as stl:
     st.markdown(f'<style>{contenido_css}<style>', unsafe_allow_html=True)
     st.markdown( """<style>
@@ -93,21 +101,23 @@ with open('style.css', 'w') as stl:
                 hora_fin = fecha + datetime.timedelta(minutes=int(minute))
                 hora_fin_total = hora_fin.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
                 return hora_fin_total
-            st.subheader('Sling Shift Creator')
+            st.subheader('Sling Shift Creator :calendar:')
             st.write('Base de datos de Airtable')
             st.dataframe(at_sling.style.set_properties(**{'background-color': '#EFFCD8'}))
             st.write('Crear partidos y modificar partidos existentes')
-
-            b_1 = st.button('Ejecutar')
+            for d in range(len(atdf)):
+                if atdf.loc[d,'Duracion'] == '0':
+                    atdf.loc[d,'Duracion'] = st.text_input(atdf.loc[d,'ID-partido'] +' introducir valor en minutos y dale a la pelota')
+            b_1 = st.button(':soccer:')
             if b_1:
                 for i in range(len(atdf)):
                     if atdf.loc[i,'publi_sling'] == False:
-                        
+                        duracion = int(atdf.loc[i,'Duracion'])
                         data = {"user": {"id": ids_sling[atdf.loc[i,'Piloto']]},
                             "summary": atdf.loc[i,'ID-partido'],
                             "location": {"id": ids_location[atdf.loc[i,'Sede']]},
                             "position": {"id": equipos[atdf.loc[i,'ID-partido'][12:-3]]},
-                            "dtend": fin_part(atdf.loc[i,'Fecha_partido'],atdf.loc[i,'Duracion']),
+                            "dtend": fin_part(atdf.loc[i,'Fecha_partido'],duracion),
                             "dtstart": atdf.loc[i,'Fecha_partido'],
                             "status": "planning"}
                         req = requests.post(endpoint, json.dumps(data), headers = headers_2)
@@ -123,9 +133,10 @@ with open('style.css', 'w') as stl:
                         for u in range(len(atdf)):
                             if datetime.datetime.strptime(z["dtstart"],'%Y-%m-%dT%H:%M:%S%z') != datetime.datetime.strptime(atdf.loc[u,'Fecha_partido'],'%Y-%m-%dT%H:%M:%S.%f%z') and z["summary"][:9]==atdf.loc[u,'ID-partido'][:9]:
                                 print(y,z["dtstart"],z["id"])
+                                duracion = int(atdf.loc[i,'Duracion'])
                                 id_new = z["id"]
                                 endpoint2 = f'https://api.getsling.com/v1/shifts/{id_new}'
-                                data = {"user": {"id": z["user"]['id']}, "summary": z['summary'], "position": z["position"], "location": z["location"], "dtend": fin_part(atdf.loc[u,'Fecha_partido'],atdf.loc[u,'Duracion']), "dtstart": atdf.loc[u,'Fecha_partido'],"status": z['status']}
+                                data = {"user": {"id": z["user"]['id']}, "summary": z['summary'], "position": z["position"], "location": z["location"], "dtend": fin_part(atdf.loc[u,'Fecha_partido'],int(duracion)), "dtstart": atdf.loc[u,'Fecha_partido'],"status": z['status']}
                                 req = requests.put(endpoint2, json.dumps(data), headers = headers_2)
                                 req.json()
 
