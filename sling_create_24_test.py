@@ -27,7 +27,7 @@ with open('style.css', 'w') as stl:
                     background-color: #38F538;
                     color: black;}
                 .st-be.st-b3.st-bf.st-b8.st-bg.st-bh.st-bi.st-bj.st-bk.st-bl.st-bm.st-bn.st-bo.st-b1.st-bp.st-au.st-ax.st-av.st-aw.st-ae.st-af.st-ag.st-ah.st-ai.st-aj.st-bq.st-br.st-bs.st-bt.st-bu.st-bv.st-cy {
-                    border: 1px solid #FFA200 !important;
+                    border: 1px solid #FFA200;
                     width: 133px;
                     }
                 .stDataFrame {background-color: #FAFCB3;
@@ -93,7 +93,8 @@ with open('style.css', 'w') as stl:
                 atdf['publi_sling']=False
 
             headers_AT = {"Authorization" : f"Bearer {api_key}",  "Content-Type" : 'application/json' }
-            headers_2 = {"Authorization" : sling_token,  "content-type" : 'application/json'}
+            #headers_2 = {"Authorization" : sling_token,  "content-type" : 'application/json'}
+            headers_2 = {"Authorization" : 'sdjfsjdkfhjsdhkf',  "content-type" : 'application/json'}
             endpoint = 'https://api.getsling.com/v1/shifts'
             endpoint2 = 'https://api.getsling.com/v1/shifts/'
             endpoint3 = f'https://api.getsling.com/v1/calendar/167205/users/3835659?dates={hoy}%2F{t_fin}'
@@ -112,6 +113,7 @@ with open('style.css', 'w') as stl:
             for d in range(len(atdf)):
                 if atdf.loc[d,'Duracion'] == '0':
                     atdf.loc[d,'Duracion'] = st.text_input(atdf.loc[d,'ID-partido'] +' introducir valor en minutos y dale a la pelota')
+            error_list = []
             b_1 = st.button(':soccer:')
             if b_1:
                 for i in range(len(atdf)):
@@ -125,11 +127,20 @@ with open('style.css', 'w') as stl:
                             "dtstart": atdf.loc[i,'Fecha_partido'],
                             "status": "planning"}
                         req = requests.post(endpoint, json.dumps(data), headers = headers_2)
+                        if req.status_code != 200:
+                            error_list.append(req.status_code)
                         summary = data['summary']
                         print(f'creado {summary}')
                         data_AT = {'records' : [{"id": atdf.loc[i,'Rec2'],'fields':{'publi_sling': True }}]}
                         req_AT = requests.patch(endpoint_AT, json.dumps(data_AT), headers = headers_AT)
-
+                if len(error_list) != 0:
+                    c1, c2, c3 = st.columns([1,6,1], gap='small')
+                    with c1:
+                        st.write(':warning:')
+                    with c2:
+                        st.write('ERROR Utilizar Sling Tools en https://slingtools-by-dsm.streamlit.app/')
+                    with c3:
+                        st.write(':warning:')
                 calendar = requests.get(endpoint3, headers = headers_2).json()
                 calend_pd_rows = []
                 try:
