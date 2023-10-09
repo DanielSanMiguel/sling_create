@@ -93,8 +93,7 @@ with open('style.css', 'w') as stl:
                 atdf['publi_sling']=False
 
             headers_AT = {"Authorization" : f"Bearer {api_key}",  "Content-Type" : 'application/json' }
-            #headers_2 = {"Authorization" : sling_token,  "content-type" : 'application/json'}
-            headers_2 = {"Authorization" : 'sdjfsjdkfhjsdhkf',  "content-type" : 'application/json'}
+            headers_2 = {"Authorization" : sling_token,  "content-type" : 'application/json'}
             endpoint = 'https://api.getsling.com/v1/shifts'
             endpoint2 = 'https://api.getsling.com/v1/shifts/'
             endpoint3 = f'https://api.getsling.com/v1/calendar/167205/users/3835659?dates={hoy}%2F{t_fin}'
@@ -127,18 +126,26 @@ with open('style.css', 'w') as stl:
                             "dtstart": atdf.loc[i,'Fecha_partido'],
                             "status": "planning"}
                         req = requests.post(endpoint, json.dumps(data), headers = headers_2)
-                        if req.status_code != 200:
-                            error_list.append(req.status_code)
-                        summary = data['summary']
-                        print(f'creado {summary}')
-                        data_AT = {'records' : [{"id": atdf.loc[i,'Rec2'],'fields':{'publi_sling': True }}]}
-                        req_AT = requests.patch(endpoint_AT, json.dumps(data_AT), headers = headers_AT)
+                        if req.status_code == 200|201:
+                            summary = data['summary']
+                            print(f'creado {summary}')
+                            data_AT = {'records' : [{"id": atdf.loc[i,'Rec2'],'fields':{'publi_sling': True }}]}
+                            req_AT = requests.patch(endpoint_AT, json.dumps(data_AT), headers = headers_AT)
+                        else:
+                            error_list.append([atdf.loc[i,'ID-partido'],req.status_code])
+                error_text = []
+                for err in error_list:
+                    if err[1] == 409:
+                        error_text.append(f'ERROR {error_list[0]} Revisar partidos en Sling')
+                    elif err[1] == 400:
+                        error_text.append(f'ERROR {error_list[0]} Utilizar Sling Tools en https://slingtools-by-dsm.streamlit.app/')
+           
                 if len(error_list) != 0:
                     c1, c2, c3 = st.columns([1,6,1], gap='small')
                     with c1:
                         st.write(':warning:')
                     with c2:
-                        st.write('ERROR Utilizar Sling Tools en https://slingtools-by-dsm.streamlit.app/')
+                        st.write(error_text)
                     with c3:
                         st.write(':warning:')
                 calendar = requests.get(endpoint3, headers = headers_2).json()
