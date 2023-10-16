@@ -125,7 +125,7 @@ with open('style.css', 'w') as stl:
                         data = {"user": {"id": ids_sling[atdf.loc[i,'Piloto']]},
                             "summary": atdf.loc[i,'ID-partido'],
                             "location": {"id": ids_location[atdf.loc[i,'Sede']]},
-                            "position": {"id": equipos[atdf.loc[i,'ID-partido'][12:-3]]},
+                            "position": {"id": position},
                             "dtend": fin_part(atdf.loc[i,'Fecha_partido'],duracion),
                             "dtstart": atdf.loc[i,'Fecha_partido'],
                             "status": "planning"}
