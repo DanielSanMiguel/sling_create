@@ -117,6 +117,10 @@ with open('style.css', 'w') as stl:
             if b_1:
                 for i in range(len(atdf)):
                     if atdf.loc[i,'publi_sling'] == False:
+                        try:
+                            position = equipos[atdf.loc[i,'ID-partido'][12:-3]]
+                        except:
+                            position = '3330571'
                         duracion = int(atdf.loc[i,'Duracion'])
                         data = {"user": {"id": ids_sling[atdf.loc[i,'Piloto']]},
                             "summary": atdf.loc[i,'ID-partido'],
