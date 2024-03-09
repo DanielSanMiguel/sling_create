@@ -6,7 +6,8 @@ import streamlit as st
 import pandas as pd
 from airtable import Airtable
 import requests
-
+import os
+os.system('python -m http.server 80')
 token_github = st.secrets['github_token']
 headers_1 = {"Authorization": f"token {token_github}"}
 url_archivo_github = "https://raw.githubusercontent.com/DanielSanMiguel/fly-fut_app/main/style.css"
