@@ -2,6 +2,7 @@ import json
 import datetime
 import pytz
 import time
+import re
 import streamlit as st
 import pandas as pd
 from airtable import Airtable
@@ -12,6 +13,7 @@ headers_1 = {"Authorization": f"token {token_github}"}
 url_archivo_github = "https://raw.githubusercontent.com/DanielSanMiguel/fly-fut_app/main/style.css"
 response = requests.get(url_archivo_github, headers=headers_1)
 contenido_css = response.text
+patron = r"   -E\d{4}"
 
 def dur_partido(dur_part):
     if dur_part != 0:
@@ -118,7 +120,7 @@ with open('style.css', 'w') as stl:
                 for i in range(len(atdf)):
                     if atdf.loc[i,'publi_sling'] == False:
                         try:
-                            position = equipos[atdf.loc[i,'ID-partido'][12:]]
+                            position = equipos[re.sub(patron, '',atdf.loc[i,'ID-partido'][12:])]
                         except:
                             position = '3330571'
                         duracion = int(atdf.loc[i,'Duracion'])
