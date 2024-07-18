@@ -88,7 +88,7 @@ with open('style.css', 'w') as stl:
             sling_token = sling_token_list[0]
             ids_sling = {si:dc.loc[ne,'ids']  for ne, si in enumerate(dc['Name']) if (dc.loc[ne,'type'] == 'piloto id')}
             equipos = {eq:dc.loc[ne,'ids']  for ne, eq in enumerate(dc['Name']) if (dc.loc[ne,'type'] == 'position id')}
-            ids_location = {l:dc.loc[ne,'ids']  for ne, l in enumerate(dc['Name']) if (dc.loc[ne,'type'] == 'location id')}
+            ids_location = {l.rstrip():dc.loc[ne,'ids']  for ne, l in enumerate(dc['Name']) if (dc.loc[ne,'type'] == 'location id')}
             try:
                 atdf['publi_sling'] = [x if x == True else (False) for x in atdf['publi_sling']]
             except:
