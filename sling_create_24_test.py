@@ -13,7 +13,7 @@ headers_1 = {"Authorization": f"token {token_github}"}
 url_archivo_github = "https://raw.githubusercontent.com/DanielSanMiguel/fly-fut_app/main/style.css"
 response = requests.get(url_archivo_github, headers=headers_1)
 contenido_css = response.text
-patron = r"   -E\d{4}"
+patron = r"-E\d{4}"
 
 def dur_partido(dur_part):
     if dur_part != 0:
@@ -116,6 +116,7 @@ with open('style.css', 'w') as stl:
                     atdf.loc[d,'Duracion'] = st.text_input(atdf.loc[d,'ID-partido'] +' introducir valor en minutos y dale a la pelota')
             error_list = []
             b_1 = st.button(':soccer:')
+        
             if b_1:
                 for i in range(len(atdf)):
                     if atdf.loc[i,'publi_sling'] == False:
