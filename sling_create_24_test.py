@@ -125,8 +125,9 @@ with open('style.css', 'w') as stl:
                         except:
                             position = '3330571'
                         duracion = int(atdf.loc[i,'Duracion'])
+                        Tipo = atdf.loc[i,'Tipo']
                         data = {"user": {"id": ids_sling[atdf.loc[i,'Piloto']]},
-                            "summary": atdf.loc[i,'ID-partido'],
+                            "summary": atdf.loc[i,'ID-partido'] + f'\nGrabación de {Tipo[0]}',
                             "location": {"id": ids_location[atdf.loc[i,'Sede']]},
                             "position": {"id": position},
                             "dtend": fin_part(atdf.loc[i,'Fecha_partido'],duracion),
