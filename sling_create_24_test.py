@@ -147,7 +147,8 @@ with open('style.css', 'w') as stl:
                         error_text.append(f'ERROR {error_list[0]} Revisar partidos en Sling')
                     elif err[1] == 400:
                         error_text.append(f'ERROR {error_list[0]} Utilizar Sling Tools en https://slingtools-by-dsm.streamlit.app/')
-           
+                    else:
+                        error_text.append(err)
                 if len(error_list) != 0:
                     c1, c2, c3 = st.columns([1,6,1], gap='small')
                     with c1:
