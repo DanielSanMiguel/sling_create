@@ -122,7 +122,7 @@ with open('style.css', 'w') as stl:
                     if atdf.loc[i,'publi_sling'] == False:
                         try:
                             
-                            position = equipos[i,atdf.loc[i,'Club'][:-5]]
+                            position = equipos[atdf.loc[i,'Club'][:-5]]
                         except:
                             position = '3330571'
                         duracion = int(atdf.loc[i,'Duracion'])
